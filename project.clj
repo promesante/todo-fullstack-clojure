@@ -127,4 +127,11 @@
                            ["cljsbuild" "once" "min"]]
               :hooks []
               :omit-source true
-              :aot :all}})
+              :aot :all}}
+
+;; Taken straight from Duct tutorial
+  :resource-paths ["resources" "target/resources"]
+  :prep-tasks     ["javac" "compile" ["run" ":duct/compiler"]]
+  :middleware     [lein-duct.plugin/middleware]
+
+)
