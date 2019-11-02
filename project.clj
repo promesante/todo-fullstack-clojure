@@ -28,7 +28,8 @@
                  [org.xerial/sqlite-jdbc "3.27.2"]]
 
   :plugins [[lein-cljsbuild "1.1.7"]
-            [lein-environ "1.1.0"]]
+            [lein-environ "1.1.0"]
+            [duct/lein-duct "0.12.1"]]
 
   :min-lein-version "2.6.1"
 
