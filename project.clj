@@ -47,7 +47,8 @@
   ;; nREPL by default starts in the :main namespace, we want to start in `user`
   ;; because that's where our development helper functions like (go) and
   ;; (browser-repl) live.
-  :repl-options {:init-ns user}
+  ;; Moved to profiles -> dev
+  ;; :repl-options {:init-ns user}
 
   :cljsbuild {:builds
               [{:id "app"
@@ -119,7 +120,8 @@
                         [lein-doo "0.1.11"]]
 
               :source-paths ["dev"]
-              :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}
+              :repl-options {:init-ns user
+                             :nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}
 
              :uberjar
              {:source-paths ^:replace ["src/clj" "src/cljc"]
