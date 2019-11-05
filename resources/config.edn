@@ -1,0 +1,65 @@
+{:duct.profile/base
+ {:duct.core/project-ns todo-fullstack-clojure
+
+  :duct.router/ataraxy
+  {:routes
+   {[:get "/"]        [:todo-fullstack-clojure.handler/index]
+    [:get "/entries"] [:todo-fullstack-clojure.handler.entries/list]
+    
+    [:post "/entries" {{:keys [description]} :body-params}]
+    [:todo-fullstack-clojure.handler.entries/create description]
+
+    [:get    "/entries/" id] [:todo-fullstack-clojure.handler.entries/find    ^int id]
+    [:delete "/entries/" id] [:todo-fullstack-clojure.handler.entries/destroy ^int id]
+
+    [:post "/users" {{:keys [email password]} :body-params}]
+    [:todo-fullstack-clojure.handler.users/create email password]
+    }}
+  
+  [:duct.handler.static/ok :todo-fullstack-clojure.handler/index]
+  {:body {:entries "/entries"}}
+
+  [:duct.handler.sql/query :todo-fullstack-clojure.handler.entries/list]
+  {:sql   ["SELECT * FROM entries"]
+   :hrefs {:href "/entries/{id}"}}
+
+  [:duct.handler.sql/insert :todo-fullstack-clojure.handler.entries/create]
+  {:request  {[_ description] :ataraxy/result}
+   :sql      ["INSERT INTO entries (description) VALUES (?)" description]
+   :location "/entries/{last_insert_rowid}"}
+  
+  [:duct.handler.sql/query-one :todo-fullstack-clojure.handler.entries/find]
+  {:request {[_ id] :ataraxy/result}
+   :sql     ["SELECT * FROM entries WHERE id = ?" id]
+   :hrefs   {:href "/entries/{id}"}}
+
+  [:duct.handler.sql/execute :todo-fullstack-clojure.handler.entries/destroy]
+  {:request {[_ id] :ataraxy/result}
+   :sql     ["DELETE FROM entries WHERE id = ?" id]}
+
+  :todo-fullstack-clojure.handler.users/create
+  {:db #ig/ref :duct.database/sql}
+  
+  :duct.migrator/ragtime
+  {:migrations [#ig/ref :todo-fullstack-clojure.migration/create-entries
+                #ig/ref :todo-fullstack-clojure.migration/create-users]}
+  
+  [:duct.migrator.ragtime/sql :todo-fullstack-clojure.migration/create-entries]
+  {:up ["CREATE TABLE entries (id INTEGER PRIMARY KEY, description TEXT)"]
+   :down ["DROP TABLE entries"]}
+
+  [:duct.migrator.ragtime/sql :todo-fullstack-clojure.migration/create-users]
+  {:up ["CREATE TABLE users (id INTEGER PRIMARY KEY, email TEXT UNIQUE, password TEXT)"]
+   :down ["DROP TABLE users"]}
+  
+  }
+
+ :duct.profile/dev   #duct/include "dev"
+ :duct.profile/local #duct/include "local"
+ :duct.profile/prod  {}
+
+ :duct.module/logging {}
+ :duct.module.web/api {}
+ :duct.module/sql {}
+
+ }
