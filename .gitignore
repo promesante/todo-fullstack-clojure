@@ -16,3 +16,4 @@ pom.xml
 pom.xml.asc
 /dev-target
 *~
+*.DS_Store
