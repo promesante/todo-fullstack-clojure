@@ -42,7 +42,7 @@
   :uberjar-name "todo-fullstack-clojure.jar"
 
   ;; Use `lein run` if you just want to start a HTTP server, without figwheel
-  :main todo-fullstack-clojure.application
+  :main todo-fullstack-clojure.main
 
   ;; nREPL by default starts in the :main namespace, we want to start in `user`
   ;; because that's where our development helper functions like (go) and
